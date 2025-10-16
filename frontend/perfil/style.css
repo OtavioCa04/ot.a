@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: #02123f;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.container {
+    background-color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: visible;
+    margin: 5.5rem auto 1rem auto;
+    height: calc(100vh - 8rem);
+    max-width: 95%;
+}
+
+.pv-top-card__photo-wrapper {
+  margin-top: 0px;
+}
+
+.profile-photo-edit__preview {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 3px solid #2563eb;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.profile-photo-edit__preview:hover {
+  transform: scale(1.05);
+}
+
+.profile-photo-edit h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+    padding: 1.5rem;
+    margin: 5rem auto 1rem auto;
+    height: calc(100vh - 7.5rem);
+  }
+
+  .pv-top-card__photo-wrapper {
+    margin-top: -100px; /* menos no mobile */
+  }
+
+  .profile-photo-edit h3 {
+    font-size: 1.25rem;
+  }
+}

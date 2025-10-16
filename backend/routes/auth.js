@@ -5,13 +5,13 @@ const db = require('../db');
 
 router.post('/register', async (req, res) => {
   try {
-    const { email, username, full_name, password } = req.body;
+    const { email, username, full_name, password, phone } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await db.query(
-      'INSERT INTO users (email, username, full_name, password) VALUES (?, ?, ?, ?)',
-      [email, username, full_name, hashedPassword]
+      'INSERT INTO users (email, username, full_name, password, phone) VALUES (?, ?, ?, ?, ?)',
+      [email, username, full_name, hashedPassword, phone]
     );
 
     res.status(201).json({ 
@@ -20,12 +20,12 @@ router.post('/register', async (req, res) => {
     });
 
   } catch (error) {
-  console.log(error); 
-  if (error.code === 'ER_DUP_ENTRY') {
-    return res.status(400).json({ error: 'Email ou username já existe' });
+    console.log(error); 
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ error: 'Email ou username já existe' });
+    }
+    res.status(500).json({ error: 'Erro ao criar usuário' });
   }
-  res.status(500).json({ error: 'Erro ao criar usuário' });
-}
 });
 
 router.post('/login', async (req, res) => {
@@ -60,13 +60,35 @@ router.post('/login', async (req, res) => {
         id: user.id,
         email: user.email,
         username: user.username,
-        full_name: user.full_name
+        full_name: user.full_name,
+        phone: user.phone
       }
     });
 
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Erro ao fazer login' });
+  }
+});
+
+router.put('/profile/bio', async (req, res) => {
+  try {
+    const { bio } = req.body;
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Token não fornecido' });
+    }
+
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    await db.query('UPDATE users SET bio = ? WHERE id = ?', [bio, decoded.id]);
+
+    res.json({ message: 'Biografia atualizada com sucesso', bio });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Erro ao atualizar biografia' });
   }
 });
 
